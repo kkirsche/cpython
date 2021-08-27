@@ -589,6 +589,30 @@ class timedelta:
         """Total seconds in the duration."""
         return ((self.days * 86400 + self.seconds) * 10**6 +
                 self.microseconds) / 10**6
+    
+    def isoformat(self):
+        """Return the timedelta formatted according to ISO.
+
+        This is 'P(n)Y(n)M(n)DT(n)H(n)M(n)S'.
+        """
+        if self < timedelta(0):
+                sign = "-"
+                self *= -1
+        else:
+            sign = ""
+            
+        seconds = self.seconds
+        microseconds = self.microseconds
+
+        minutes = seconds // 60
+        seconds = seconds % 60
+
+        hours = minutes // 60
+        minutes = minutes % 60
+        ms = ".{:06d}".format(microseconds) if microseconds else ""
+        return "{}P{}DT{:02d}H{:02d}M{:02d}{}S".format(
+            sign, self.days, hours, minutes, seconds, ms
+        )
 
     # Read-only field accessors
     @property
